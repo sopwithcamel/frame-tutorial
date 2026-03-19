@@ -65,8 +65,10 @@ async def show_name(name, bg, fg):
     #
     # We want the text to sit roughly in the middle.
 
-    # getbbox tells us the size of the text before we draw it.
-    bbox = font.getbbox(name)          # returns (left, top, right, bottom)
+    # textbbox tells us the size of the text before we draw it.
+    # We pass (0, 0) as a starting position just to measure -- it returns
+    # (left, top, right, bottom) pixel coordinates of the text box.
+    bbox = draw.textbbox((0, 0), name, font=font)
     text_width  = bbox[2] - bbox[0]
     text_height = bbox[3] - bbox[1]
 
