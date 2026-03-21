@@ -16,10 +16,11 @@ from idotmatrix import ConnectionManager, Gif
 
 
 # -----------------------------------------------------------
-# THIS IS THE FUN PART -- change these three things!
+# THIS IS THE FUN PART -- change these things!
 # -----------------------------------------------------------
 
-my_name = "Nishtha"           # <-- put your name here (keep the quotes)
+first_name = "Nishtha"     # <-- your first name
+last_name  = "???"         # <-- your last name
 
 background_colour = (  0,   0, 128)   # the colour behind the text (dark blue)
 text_colour       = (255, 255,   0)   # the colour of the letters   (yellow)
@@ -42,7 +43,7 @@ FRAME_ADDRESS = "AF:32:CD:F6:81:30"
 # Everything below here makes the magic happen.
 # -----------------------------------------------------------
 
-async def show_name(name, bg, fg):
+async def show_name(line1, line2, bg, fg):
     # Step 1: Create a picture filled with the background colour.
     image = Image.new("RGB", (64, 64), bg)
 
@@ -51,11 +52,10 @@ async def show_name(name, bg, fg):
 
     # Step 3: Load a font.
     # load_default() gives us a simple built-in font.
-    # Each letter is about 6 pixels wide and 8 pixels tall.
+    # Each letter is 6 pixels wide and 8 pixels tall.
     font = ImageFont.load_default()
 
-    # Step 4: Work out where to put the text so it is centred.
-    # Coordinates on the screen work like this:
+    # Step 4: Coordinates on the screen work like this:
     #
     #   (0,0) -----> x increases this way ---> (63, 0)
     #     |
@@ -63,19 +63,33 @@ async def show_name(name, bg, fg):
     #     |
     #   (0,63)                                 (63,63)
     #
-    # We want the text to sit roughly in the middle.
+    # The frame is 64 pixels wide and 64 pixels tall.
+    # Each letter is 6 pixels wide and 8 pixels tall.
+    # There are two lines of text, so two separate (x, y) positions.
 
-    # The default bitmap font has fixed-size characters:
-    #   each letter is 6 pixels wide and 8 pixels tall.
-    # So we can work out the total text size ourselves.
-    text_width  = len(name) * 6
-    text_height = 8
+    # We have worked out x and y for the first line (top line).
+    line1_width = len(line1) * 6
+    x1 = (64 - line1_width) // 2    # centred horizontally
+    y1 = 24                          # somewhere near the middle -- but is this right?
 
-    x = (64 - text_width)  // 2       # centre horizontally
-    y = (64 - text_height) // 2       # centre vertically
+    # *** YOUR CHALLENGE ***
+    # Work out x2 and y2 for the second line yourself!
+    #
+    # Hints:
+    #   - x2 should centre the second word horizontally, just like x1.
+    #     The formula is the same -- but use line2 instead of line1.
+    #   - y2 should be BELOW y1.  Each line of text is 8 pixels tall,
+    #     so how many pixels below y1 should y2 be?
+    #
+    # Replace the ??? below with your answers.
 
-    # Step 5: Draw the text at position (x, y).
-    draw.text((x, y), name, font=font, fill=fg)
+    line2_width = len(line2) * 6
+    x2 = ???                          # <-- you figure this out!
+    y2 = ???                          # <-- you figure this out!
+
+    # Step 5: Draw both lines of text.
+    draw.text((x1, y1), line1, font=font, fill=fg)
+    draw.text((x2, y2), line2, font=font, fill=fg)
 
     # Step 6: Save and send!
     image.save("name.gif")
@@ -88,9 +102,9 @@ async def show_name(name, bg, fg):
 
     gif = Gif()
     await gif.uploadUnprocessed("name.gif")
-    print(f"Done! '{name}' is on the frame! ✨")
+    print(f"Done! '{line1} {line2}' is on the frame! ✨")
     #   f"..."  is called an f-string.  Anything inside { } gets replaced
     #   with the actual value of the variable.  Pretty handy!
 
 
-asyncio.run(show_name(my_name, background_colour, text_colour))
+asyncio.run(show_name(first_name, last_name, background_colour, text_colour))
